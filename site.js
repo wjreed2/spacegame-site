@@ -21,36 +21,19 @@ const SHOTS = [
 
 const $ = (id) => document.getElementById(id);
 
-function detectOS() {
-  const p = (navigator.userAgentData?.platform || navigator.platform || navigator.userAgent).toLowerCase();
-  if (/iphone|ipad|android/.test(navigator.userAgent.toLowerCase())) return "mobile";
-  if (p.includes("mac")) return "mac";
-  if (p.includes("win")) return "win";
-  return "other";
-}
-
+const isMobile = () => /iphone|ipad|android/.test(navigator.userAgent.toLowerCase());
 const mb = (bytes) => `${Math.round(bytes / 1048576)} MB`;
-const NAMES = { mac: "macOS", win: "Windows" };
 
+// Two identical buttons, Windows then macOS, whatever the visitor is on. A platform missing from the newest
+// release links to the releases page instead.
 function setButtons(assets, label) {
-  const os = detectOS();
-  const primaryKey = os === "win" ? "win" : "mac";
-  const order = os === "mac" || os === "win" ? [primaryKey, primaryKey === "mac" ? "win" : "mac"] : ["win", "mac"];
-
-  const fill = (key, linkEl, labelEl, subEl) => {
+  for (const key of ["win", "mac"]) {
     const a = assets[key];
-    linkEl.href = a ? a.browser_download_url : RELEASES;
-    if (labelEl) labelEl.textContent = `For ${NAMES[key]}`;
-    subEl.textContent = labelEl ? (a ? `${mb(a.size)} zip` : "") : (a ? `${NAMES[key]} · ${mb(a.size)}` : NAMES[key]);
-  };
-
-  fill(order[0], $("dl-primary"), null, $("dl-primary-sub"));
-  $("dl-primary").querySelector(".btn-label").textContent = `Download`;
-  fill(order[1], $("dl-secondary"), $("dl-secondary-label"), $("dl-secondary-sub"));
-  $("dl-secondary").hidden = false;
-
+    $(`dl-${key}`).href = a ? a.browser_download_url : RELEASES;
+    $(`dl-${key}-sub`).textContent = a ? `Download · ${mb(a.size)}` : "Download";
+  }
   if (label) $("build-tag").textContent = label;
-  if (os === "mobile" || os === "other")
+  if (isMobile())
     $("dl-note").innerHTML = `Windows &amp; macOS only for now · <a href="#install">install notes</a>`;
 }
 
