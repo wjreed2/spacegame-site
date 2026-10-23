@@ -2,7 +2,7 @@
 // "create a release, attach the mac + windows zips". Asset names only need to contain
 // "mac" / "win", so renaming the game doesn't break the links.
 const REPO = "wjreed2/spacegame-site";
-const RELEASES = `https://github.com/${REPO}/releases/latest`;
+const RELEASES = `https://github.com/${REPO}/releases`;
 
 const SHOTS = [
   ["flight", "In flight"],
@@ -55,12 +55,14 @@ function setButtons(assets, label) {
 }
 
 async function loadRelease() {
-  $("releases-link").href = `https://github.com/${REPO}/releases`;
+  $("releases-link").href = RELEASES;
   setButtons({}, null);   // sensible links even if the API call fails or is rate-limited
   try {
-    const r = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, { headers: { Accept: "application/vnd.github+json" } });
+    // newest release, pre-releases included (/releases/latest skips them, and dev builds are pre-releases)
+    const r = await fetch(`https://api.github.com/repos/${REPO}/releases?per_page=10`, { headers: { Accept: "application/vnd.github+json" } });
     if (!r.ok) return;
-    const rel = await r.json();
+    const rel = (await r.json()).find((x) => !x.draft && x.assets?.length);
+    if (!rel) return;
     const assets = {};
     for (const a of rel.assets || []) {
       const n = a.name.toLowerCase();
