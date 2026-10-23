@@ -1,0 +1,91 @@
+// Download buttons read the latest GitHub release, so publishing a new build is just
+// "create a release, attach the mac + windows zips". Asset names only need to contain
+// "mac" / "win", so renaming the game doesn't break the links.
+const REPO = "wjreed2/spacegame-site";
+const RELEASES = `https://github.com/${REPO}/releases/latest`;
+
+const SHOTS = [
+  ["flight", "In flight"],
+  ["hangar", "The hangar builder"],
+  ["combat", "Combat"],
+  ["mining", "Mining an asteroid field"],
+  ["station", "Docked at a station"],
+  ["crew", "Hire crew"],
+  ["command", "The command table"],
+  ["map", "Sector map"],
+  ["galaxy", "Galaxy map"],
+  ["scanning", "Scanning a planet"],
+  ["outpost", "A Kestrel station"],
+  ["hero", "Warlord-class ship"],
+];
+
+const $ = (id) => document.getElementById(id);
+
+function detectOS() {
+  const p = (navigator.userAgentData?.platform || navigator.platform || navigator.userAgent).toLowerCase();
+  if (/iphone|ipad|android/.test(navigator.userAgent.toLowerCase())) return "mobile";
+  if (p.includes("mac")) return "mac";
+  if (p.includes("win")) return "win";
+  return "other";
+}
+
+const mb = (bytes) => `${Math.round(bytes / 1048576)} MB`;
+const NAMES = { mac: "macOS", win: "Windows" };
+
+function setButtons(assets, label) {
+  const os = detectOS();
+  const primaryKey = os === "win" ? "win" : "mac";
+  const order = os === "mac" || os === "win" ? [primaryKey, primaryKey === "mac" ? "win" : "mac"] : ["win", "mac"];
+
+  const fill = (key, linkEl, labelEl, subEl) => {
+    const a = assets[key];
+    linkEl.href = a ? a.browser_download_url : RELEASES;
+    if (labelEl) labelEl.textContent = `For ${NAMES[key]}`;
+    subEl.textContent = labelEl ? (a ? `${mb(a.size)} zip` : "") : (a ? `${NAMES[key]} · ${mb(a.size)}` : NAMES[key]);
+  };
+
+  fill(order[0], $("dl-primary"), null, $("dl-primary-sub"));
+  $("dl-primary").querySelector(".btn-label").textContent = `Download`;
+  fill(order[1], $("dl-secondary"), $("dl-secondary-label"), $("dl-secondary-sub"));
+  $("dl-secondary").hidden = false;
+
+  if (label) $("build-tag").textContent = label;
+  if (os === "mobile" || os === "other")
+    $("dl-note").innerHTML = `Windows &amp; macOS only for now · <a href="#install">install notes</a>`;
+}
+
+async function loadRelease() {
+  $("releases-link").href = `https://github.com/${REPO}/releases`;
+  setButtons({}, null);   // sensible links even if the API call fails or is rate-limited
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, { headers: { Accept: "application/vnd.github+json" } });
+    if (!r.ok) return;
+    const rel = await r.json();
+    const assets = {};
+    for (const a of rel.assets || []) {
+      const n = a.name.toLowerCase();
+      if (!n.endsWith(".zip") && !n.endsWith(".dmg")) continue;
+      if (n.includes("mac") || n.includes("osx")) assets.mac = a;
+      else if (n.includes("win")) assets.win = a;
+    }
+    const date = new Date(rel.published_at).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+    setButtons(assets, `${rel.name || rel.tag_name} · ${date}`);
+  } catch (_) { /* keep the fallback links */ }
+}
+
+function buildGallery() {
+  const g = $("gallery"), box = $("lightbox"), big = $("lightbox-img");
+  for (const [file, alt] of SHOTS) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.setAttribute("aria-label", `View: ${alt}`);
+    b.innerHTML = `<img src="img/${file}.jpg" alt="${alt}" loading="lazy">`;
+    b.onclick = () => { big.src = `img/${file}.jpg`; big.alt = alt; box.showModal(); };
+    g.appendChild(b);
+  }
+  box.addEventListener("click", (e) => { if (e.target === box) box.close(); });
+}
+
+$("year").textContent = new Date().getFullYear();
+buildGallery();
+loadRelease();

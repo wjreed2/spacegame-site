@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Untitled — a space game</title>
+  <meta name="description" content="A third-person space flight and ship-building game. Start in a rickety one-seat pod, build a better ship one cell at a time.">
+  <meta property="og:title" content="Untitled — a space game">
+  <meta property="og:description" content="Fly, fight, haul and build your ship one cell at a time. Free dev builds for Windows and macOS.">
+  <meta property="og:image" content="img/hero.jpg">
+  <meta name="theme-color" content="#08070d">
+  <link rel="preload" href="fonts/BebasNeue-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="#">Untitled</a>
+    <span class="build-tag" id="build-tag">Dev build</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-bg" src="img/hero.jpg" alt="">
+      <div class="hero-shade"></div>
+      <div class="hero-body">
+        <p class="kicker">A space flight &amp; ship-building game</p>
+        <h1>Untitled</h1>
+        <p class="lede">You start in a rickety one-seat pod. Take contracts, mine, trade and fight. Then build a better ship, one grid cell at a time.</p>
+
+        <div class="download" id="download">
+          <a class="btn btn-primary" id="dl-primary" href="#">
+            <span class="btn-label">Download</span>
+            <span class="btn-sub" id="dl-primary-sub">Windows &amp; macOS</span>
+          </a>
+          <a class="btn btn-ghost" id="dl-secondary" href="#" hidden>
+            <span class="btn-label" id="dl-secondary-label">Other platform</span>
+            <span class="btn-sub" id="dl-secondary-sub"></span>
+          </a>
+        </div>
+        <p class="dl-note" id="dl-note">Free dev build · <a href="#install">install notes</a></p>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2 class="section"><span>The loop</span></h2>
+      <div class="panels">
+        <article class="panel">
+          <img src="img/hangar.jpg" alt="The 3D hangar ship builder" loading="lazy">
+          <h3>Build</h3>
+          <p>A 3D hangar builder. Drag parts, stack hull, bolt on guns, engines and cargo. Every ship in the game is built from the same parts.</p>
+        </article>
+        <article class="panel">
+          <img src="img/combat.jpg" alt="Ship firing at pirates" loading="lazy">
+          <h3>Fly &amp; fight</h3>
+          <p>Third-person flight with boost, cruise drive, missiles and gatlings. Sectors get more dangerous the further out you go.</p>
+        </article>
+        <article class="panel">
+          <img src="img/station.jpg" alt="Docked at a station" loading="lazy">
+          <h3>Earn</h3>
+          <p>Take contracts at stations, haul cargo, mine asteroid fields and trade between sectors. Hire crew who level up.</p>
+        </article>
+        <article class="panel">
+          <img src="img/galaxy.jpg" alt="The galaxy map" loading="lazy">
+          <h3>Go further</h3>
+          <p>Jump across the galaxy to more dangerous, better-paying sectors, with autopilot and a tactical nav table.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="gallery-wrap">
+      <h2 class="section"><span>Screens</span></h2>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <section class="install" id="install">
+      <h2 class="section"><span>Install notes</span></h2>
+      <div class="cards">
+        <div class="card">
+          <h3>macOS</h3>
+          <p>Unzip and drag the app to Applications. It isn't notarized yet, so the first launch is blocked. Open <b>System Settings → Privacy &amp; Security</b>, scroll down and click <b>Open Anyway</b>. Runs on Apple Silicon and Intel.</p>
+        </div>
+        <div class="card card-cyan">
+          <h3>Windows</h3>
+          <p>Unzip the whole folder and run the <b>.exe</b> inside. If SmartScreen says "Windows protected your PC", click <b>More info → Run anyway</b>.</p>
+        </div>
+        <div class="card card-yellow">
+          <h3>It's early</h3>
+          <p>These are dev builds: expect rough edges and save wipes between versions. Press <b>H</b> in game for the controls.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© <span id="year">2026</span></span>
+    <a id="releases-link" href="#">All releases</a>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox">
+    <form method="dialog"><button class="lb-close" aria-label="Close">×</button></form>
+    <img id="lightbox-img" alt="">
+  </dialog>
+
+  <script src="site.js"></script>
+</body>
+</html>
