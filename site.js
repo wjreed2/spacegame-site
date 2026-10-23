@@ -10,7 +10,6 @@ const SHOTS = [
   ["combat", "Combat"],
   ["mining", "Mining an asteroid field"],
   ["station", "Docked at a station"],
-  ["crew", "Hire crew"],
   ["command", "The command table"],
   ["map", "Sector map"],
   ["galaxy", "Galaxy map"],
