@@ -62,7 +62,7 @@ const hasNotes = (rel) => rel.body && !/^\s*dev build [^\n]*$/i.test(rel.body);
 const shortDate = (iso) => new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 
 function renderNews(releases) {
-  const withNotes = releases.filter((r) => !r.draft && hasNotes(r)).slice(0, 4);
+  const withNotes = releases.filter((r) => !r.draft && hasNotes(r)).slice(0, 5);
   if (!withNotes.length) return;
   const [latest, ...earlier] = withNotes;
   const name = (r) => esc(r.name || r.tag_name);
