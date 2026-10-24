@@ -4,16 +4,21 @@
 const REPO = "wjreed2/spacegame-site";
 const RELEASES = `https://github.com/${REPO}/releases`;
 
+// img/* is cached for a week (render.yaml): bump IMG_V when screenshots are replaced under the same names.
+const IMG_V = 2;
 const SHOTS = [
-  ["flight", "In flight"],
+  ["combat", "A capital ship against a pirate Warlord"],
+  ["dogfight", "A gunship in the thick of a pirate pack"],
+  ["broadside", "Dreadnought and Warlord trading broadsides"],
   ["hangar", "The hangar builder"],
-  ["combat", "Combat"],
-  ["mining", "Mining an asteroid field"],
-  ["station", "Docked at a station"],
+  ["flight", "In flight"],
+  ["mining", "Mining an asteroid"],
+  ["station", "Trading at a station"],
   ["command", "The command table"],
   ["map", "Sector map"],
   ["galaxy", "Galaxy map"],
-  ["scanning", "Scanning a planet"],
+  ["scanning", "Scanning a moon"],
+  ["blackhole", "Arriving at a black hole"],
   ["outpost", "A Kestrel station"],
   ["hero", "Warlord-class ship"],
 ];
@@ -111,8 +116,8 @@ function buildGallery() {
     const b = document.createElement("button");
     b.type = "button";
     b.setAttribute("aria-label", `View: ${alt}`);
-    b.innerHTML = `<img src="img/${file}.jpg" alt="${alt}" loading="lazy">`;
-    b.onclick = () => { big.src = `img/${file}.jpg`; big.alt = alt; box.showModal(); };
+    b.innerHTML = `<img src="img/${file}.jpg?v=${IMG_V}" alt="${alt}" loading="lazy">`;
+    b.onclick = () => { big.src = `img/${file}.jpg?v=${IMG_V}`; big.alt = alt; box.showModal(); };
     g.appendChild(b);
   }
   box.addEventListener("click", (e) => { if (e.target === box) box.close(); });
